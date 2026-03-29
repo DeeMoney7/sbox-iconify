@@ -4,7 +4,7 @@
   "Org": "mint",
   "Ident": "iconify",
   "Schema": 1,
-  "IncludeSourceFiles": true,
+  "IncludeSourceFiles": false,
   "Resources": null,
   "PackageReferences": [],
   "EditorReferences": null,

@@ -1,0 +1,5 @@
+.sbox/
+.vs/
+obj/
+bin/
+*.user
