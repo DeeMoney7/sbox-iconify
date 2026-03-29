@@ -1,0 +1,22 @@
+{
+  "Title": "Sbox Iconify",
+  "Type": "library",
+  "Org": "mint",
+  "Ident": "iconify",
+  "Schema": 1,
+  "IncludeSourceFiles": true,
+  "Resources": null,
+  "PackageReferences": [],
+  "EditorReferences": null,
+  "Mounts": null,
+  "IsStandaloneOnly": false,
+  "Metadata": {
+    "Compiler": {
+      "RootNamespace": "Iconify",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;",
+      "Nullables": true,
+      "ReleaseMode": "Debug"
+    }
+  }
+}
