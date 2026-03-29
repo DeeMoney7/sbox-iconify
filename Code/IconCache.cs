@@ -52,12 +52,13 @@ public static class IconCache
 			return cached;
 
 		// Disk cache
-		var diskPath = $"{cacheKey}.png";
+		var diskPath = $"{cacheKey}.svg";
 		if ( DiskCache is not null && DiskCache.FileExists( diskPath ) )
 		{
 			try
 			{
-				var tex = Texture.Load( DiskCache, diskPath );
+				var bytes = DiskCache.ReadAllBytes( diskPath );
+				var tex = Texture.Load( bytes );
 				if ( tex is not null && tex.IsValid() )
 				{
 					MemoryCache[cacheKey] = tex;
@@ -68,7 +69,7 @@ public static class IconCache
 		}
 
 		// Fetch from API
-		var texture = await FetchFromApi( prefix, name, color, size );
+		var texture = await FetchFromApi( prefix, name, color, size, cacheKey );
 		if ( texture is not null )
 		{
 			MemoryCache[cacheKey] = texture;
@@ -77,15 +78,14 @@ public static class IconCache
 		return texture;
 	}
 
-	private static async Task<Texture> FetchFromApi( string prefix, string name, string color, int size )
+	private static async Task<Texture> FetchFromApi( string prefix, string name, string color, int size, string cacheKey )
 	{
 		var encodedColor = Uri.EscapeDataString( color ?? "white" );
 		var url = $"https://api.iconify.design/{prefix}/{name}.svg?color={encodedColor}&width={size}&height={size}";
 
 		try
 		{
-			var http = new Http( new Uri( url ) );
-			var svgData = await http.GetBytesAsync();
+			var svgData = await Http.RequestBytesAsync( url );
 
 			if ( svgData is null || svgData.Length == 0 )
 			{
@@ -93,13 +93,11 @@ public static class IconCache
 				return null;
 			}
 
-			// S&Box can create textures from SVG data
 			var texture = Texture.Load( svgData );
 
 			if ( texture is not null && texture.IsValid() )
 			{
-				// Save to disk cache
-				SaveToDiskCache( $"{prefix}_{name}_{color}_{size}.png", svgData );
+				SaveToDiskCache( $"{cacheKey}.svg", svgData );
 			}
 
 			return texture;
