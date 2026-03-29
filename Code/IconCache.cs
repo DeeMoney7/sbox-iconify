@@ -57,8 +57,7 @@ public static class IconCache
 		{
 			try
 			{
-				var bytes = DiskCache.ReadAllBytes( diskPath );
-				var tex = Texture.Load( bytes );
+				var tex = Texture.Load( DiskCache, diskPath );
 				if ( tex is not null && tex.IsValid() )
 				{
 					MemoryCache[cacheKey] = tex;
@@ -93,7 +92,11 @@ public static class IconCache
 				return null;
 			}
 
-			var texture = Texture.Load( svgData );
+			// Write to temp file and load as texture
+			var tempPath = $"iconify_temp_{cacheKey}.svg";
+			FileSystem.Data?.WriteAllBytes( tempPath, svgData );
+			var texture = Texture.Load( FileSystem.Data, tempPath );
+			FileSystem.Data?.DeleteFile( tempPath );
 
 			if ( texture is not null && texture.IsValid() )
 			{
