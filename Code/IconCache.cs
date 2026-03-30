@@ -43,7 +43,7 @@ public static class IconCache
 	/// <summary>
 	/// Get an icon texture from cache or fetch from the Iconify API.
 	/// </summary>
-	public static async Task<Texture> GetOrFetch( string prefix, string name, string color, int size )
+	public static async Task<Texture?> GetOrFetch( string prefix, string name, string color, int size )
 	{
 		var cacheKey = $"{prefix}_{name}_{color}_{size}";
 
@@ -78,7 +78,7 @@ public static class IconCache
 		return texture;
 	}
 
-	private static async Task<Texture> FetchFromApi( string prefix, string name, string color, int size, string cacheKey )
+	private static async Task<Texture?> FetchFromApi( string prefix, string name, string color, int size, string cacheKey )
 	{
 		var encodedColor = Uri.EscapeDataString( color ?? "white" );
 		var url = $"https://api.iconify.design/{prefix}/{name}.svg?color={encodedColor}&width={size}&height={size}";
