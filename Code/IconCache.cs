@@ -57,7 +57,8 @@ public static class IconCache
 		{
 			try
 			{
-				var tex = Texture.Load( DiskCache, diskPath );
+				var svgString = DiskCache.ReadAllText( diskPath );
+				var tex = Texture.CreateFromSvgSource( svgString, size, size, null );
 				if ( tex is not null && tex.IsValid() )
 				{
 					MemoryCache[cacheKey] = tex;
@@ -84,23 +85,20 @@ public static class IconCache
 
 		try
 		{
-			var svgData = await Http.RequestBytesAsync( url );
+			var svgString = await Http.RequestStringAsync( url );
 
-			if ( svgData is null || svgData.Length == 0 )
+			if ( string.IsNullOrEmpty( svgString ) )
 			{
 				Log.Warning( $"[Iconify] Empty response for {prefix}:{name}" );
 				return null;
 			}
 
-			// Write to temp file and load as texture
-			var tempPath = $"iconify_temp_{cacheKey}.svg";
-			FileSystem.Data?.WriteAllBytes( tempPath, svgData );
-			var texture = Texture.Load( FileSystem.Data, tempPath );
-			FileSystem.Data?.DeleteFile( tempPath );
+			// Create texture directly from SVG string with size
+			var texture = Texture.CreateFromSvgSource( svgString, size, size, null );
 
 			if ( texture is not null && texture.IsValid() )
 			{
-				SaveToDiskCache( $"{cacheKey}.svg", svgData );
+				SaveToDiskCache( $"{cacheKey}.svg", System.Text.Encoding.UTF8.GetBytes( svgString ) );
 			}
 
 			return texture;
