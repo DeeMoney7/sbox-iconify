@@ -12,7 +12,7 @@ namespace Iconify;
 public static class IconCache
 {
 	private static readonly Dictionary<string, Texture> MemoryCache = new();
-	private static BaseFileSystem _diskCache;
+	private static BaseFileSystem? _diskCache;
 	private static bool _diskCacheReady;
 
 	private static BaseFileSystem DiskCache

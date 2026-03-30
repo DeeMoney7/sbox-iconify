@@ -13,8 +13,8 @@ namespace Iconify;
 [Alias( "iconify" )]
 public partial class IconifyPanel : Panel
 {
-	private Texture _texture;
-	private string _loadedKey;
+	private Texture? _texture;
+	private string? _loadedKey;
 
 	/// <summary>
 	/// The icon identifier. Format: "prefix:name" e.g. "ph:house", "mdi:home", "tabler:settings"
